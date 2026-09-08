@@ -1,0 +1,759 @@
+/* =============================================================================
+   HALLOWEEN PASS — TRIALS OF MASTERY STYLESHEET
+   ============================================================================= */
+
+/* Modal Overlay */
+#halloween-pass-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(8, 4, 15, 0.92);
+    backdrop-filter: blur(8px);
+    z-index: 2500;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'Press Start 2P', cursive, sans-serif;
+    color: var(--text-primary, #f5e6d3);
+    user-select: none;
+}
+
+#halloween-pass-overlay.open {
+    display: flex;
+    animation: hwPassFadeIn 0.3s ease-out;
+}
+
+@keyframes hwPassFadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Header Container */
+.hw-pass-header {
+    background: linear-gradient(180deg, #180a2b 0%, #110520 100%);
+    border-bottom: 2px solid #4a2d6e;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+    padding: 14px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    z-index: 10;
+}
+
+.hw-pass-title-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.hw-pass-emblem {
+    width: 48px;
+    height: 48px;
+    background: radial-gradient(circle, #ff7518 0%, #4a0e4e 100%);
+    border: 2px solid #ff7518;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(255, 117, 24, 0.6);
+}
+
+.hw-pass-title-text h2 {
+    margin: 0;
+    font-size: 1.1em;
+    color: #ff7518;
+    text-shadow: 0 0 10px rgba(255, 117, 24, 0.6);
+    letter-spacing: 1px;
+}
+
+.hw-pass-title-text .hw-pass-subtitle {
+    margin: 4px 0 0 0;
+    font-size: 0.55em;
+    color: #b8a89a;
+}
+
+/* Progress & Stats in Top Bar */
+.hw-pass-progress-box {
+    flex: 1;
+    min-width: 260px;
+    max-width: 520px;
+    background: rgba(26, 15, 46, 0.85);
+    border: 1px solid #4a2d6e;
+    border-radius: 10px;
+    padding: 10px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hw-pass-progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.6em;
+    color: #ffcc00;
+}
+
+.hw-pass-bar-track {
+    width: 100%;
+    height: 12px;
+    background: #090312;
+    border: 1px solid #4a2d6e;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.hw-pass-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #9333ea, #ff7518, #ffd700);
+    border-radius: 6px;
+    width: 0%;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(255, 117, 24, 0.8);
+}
+
+.hw-pass-progress-sublabels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.5em;
+    color: #b8a89a;
+}
+
+/* Currencies & Controls */
+.hw-pass-top-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.hw-currency-chip {
+    background: #1e1136;
+    border: 1px solid #ff7518;
+    border-radius: 20px;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.65em;
+    color: #ffae42;
+    box-shadow: 0 0 10px rgba(255, 117, 24, 0.2);
+}
+
+.hw-btn-claim-all {
+    background: linear-gradient(90deg, #ff7518, #ff9900);
+    color: #000;
+    font-size: 0.6em;
+    font-weight: bold;
+    padding: 8px 16px;
+    border: 2px solid #ffd700;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);
+    transition: all 0.2s;
+    display: none;
+}
+
+.hw-btn-claim-all:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.9);
+}
+
+.hw-pass-tab-btn {
+    background: #2a1848;
+    color: #f5e6d3;
+    border: 1px solid #4a2d6e;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.55em;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.hw-pass-tab-btn.active, .hw-pass-tab-btn:hover {
+    background: #4a2d6e;
+    color: #ff7518;
+    border-color: #ff7518;
+}
+
+.hw-pass-close-btn {
+    background: #33132e;
+    color: #ff4d6d;
+    border: 1px solid #ff4d6d;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.8em;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.hw-pass-close-btn:hover {
+    background: #ff4d6d;
+    color: #000;
+}
+
+/* Main Pass Content Body */
+.hw-pass-body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding: 30px 20px 80px 20px;
+    position: relative;
+    background: radial-gradient(circle at 50% 10%, #1c0c33 0%, #080310 100%);
+    scroll-behavior: smooth;
+}
+
+/* Map Track Container */
+.hw-pass-track-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+/* Biome Zones */
+.hw-biome-zone {
+    background: rgba(22, 11, 40, 0.6);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    border-radius: 16px;
+    padding: 24px 20px 30px 20px;
+    position: relative;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.hw-biome-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    border-bottom: 1px dashed rgba(255, 117, 24, 0.4);
+    padding-bottom: 10px;
+}
+
+.hw-biome-title {
+    font-size: 0.85em;
+    color: #ff9900;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 1px;
+}
+
+.hw-biome-range {
+    font-size: 0.55em;
+    color: #9333ea;
+    background: #110520;
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1px solid #4a2d6e;
+}
+
+/* Nodes Row (Road Layout) */
+.hw-nodes-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    position: relative;
+}
+
+/* Connecting Line Between Nodes */
+.hw-nodes-grid::before {
+    content: '';
+    position: absolute;
+    top: 52px;
+    left: 40px;
+    right: 40px;
+    height: 4px;
+    background: repeating-linear-gradient(90deg, #4a2d6e 0, #4a2d6e 15px, transparent 15px, transparent 25px);
+    z-index: 1;
+}
+
+/* Individual Reward Node */
+.hw-pass-node {
+    background: #170b2c;
+    border: 2px solid #4a2d6e;
+    border-radius: 14px;
+    padding: 16px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 160px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+}
+
+.hw-pass-node:hover {
+    transform: translateY(-4px);
+    border-color: #ff7518;
+    box-shadow: 0 8px 25px rgba(255, 117, 24, 0.4);
+}
+
+/* Node Level Badge */
+.hw-node-lvl {
+    position: absolute;
+    top: -10px;
+    background: #090312;
+    border: 1px solid #4a2d6e;
+    color: #b8a89a;
+    font-size: 0.5em;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* Node Icon Frame */
+.hw-node-icon-box {
+    width: 64px;
+    height: 64px;
+    background: radial-gradient(circle, #2d164d 0%, #150926 100%);
+    border: 2px solid #4a2d6e;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8px 0 10px 0;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.hw-node-icon-box svg {
+    width: 34px;
+    height: 34px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7));
+}
+
+/* Node Title & Value */
+.hw-node-title {
+    font-size: 0.55em;
+    color: #f5e6d3;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.hw-node-reward-val {
+    font-size: 0.5em;
+    color: #ffcc00;
+    margin-bottom: 10px;
+}
+
+/* Node States */
+/* 1. LOCKED */
+.hw-pass-node.locked {
+    opacity: 0.65;
+    filter: grayscale(0.5);
+    background: #110720;
+}
+
+.hw-pass-node.locked:hover {
+    filter: grayscale(0);
+    opacity: 0.9;
+}
+
+/* 2. CURRENT (You are here) */
+.hw-pass-node.current {
+    border-color: #ffd700;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
+    animation: hwPulseCurrent 2s infinite alternate;
+}
+
+@keyframes hwPulseCurrent {
+    0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+    100% { transform: scale(1.03); box-shadow: 0 0 28px rgba(255, 215, 0, 0.9); }
+}
+
+.hw-pass-node.current .hw-node-lvl {
+    background: #ffd700;
+    color: #000;
+    border-color: #fff;
+}
+
+.hw-you-are-here-tag {
+    position: absolute;
+    bottom: -12px;
+    background: #ffd700;
+    color: #000;
+    font-size: 0.45em;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    z-index: 5;
+}
+
+/* 3. AVAILABLE TO CLAIM */
+.hw-pass-node.available {
+    border-color: #39ff14;
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.6);
+    animation: hwPulseAvailable 1.8s infinite alternate;
+}
+
+@keyframes hwPulseAvailable {
+    0% { box-shadow: 0 0 12px rgba(57, 255, 20, 0.4); }
+    100% { box-shadow: 0 0 24px rgba(57, 255, 20, 0.9); }
+}
+
+.hw-btn-claim-node {
+    background: #39ff14;
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.5em;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    transition: transform 0.1s;
+}
+
+.hw-btn-claim-node:hover {
+    transform: scale(1.08);
+}
+
+/* 4. CLAIMED */
+.hw-pass-node.claimed {
+    border-color: #2b4528;
+    background: #0d170e;
+    opacity: 0.85;
+}
+
+.hw-node-claimed-tag {
+    color: #39ff14;
+    font-size: 0.48em;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: bold;
+}
+
+/* Level 25 - Master Node (Final Grand Node) */
+.hw-pass-node.master-node {
+    grid-column: span 2;
+    background: radial-gradient(circle, #38074d 0%, #150024 100%);
+    border: 3px solid #ffd700;
+    box-shadow: 0 0 35px rgba(255, 215, 0, 0.6), 0 0 50px rgba(147, 51, 234, 0.4);
+    padding: 24px;
+}
+
+.hw-pass-node.master-node .hw-node-icon-box {
+    width: 84px;
+    height: 84px;
+    border-color: #ffd700;
+    background: radial-gradient(circle, #ff7518 0%, #4a0e4e 100%);
+}
+
+.hw-pass-node.master-node .hw-node-icon-box svg {
+    width: 48px;
+    height: 48px;
+}
+
+/* Preview / Claim Modal */
+#hw-reward-preview-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 3000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.hw-preview-card {
+    background: #190a2e;
+    border: 2px solid #ff7518;
+    border-radius: 16px;
+    padding: 26px;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 35px rgba(255, 117, 24, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    animation: hwPassFadeIn 0.25s ease-out;
+}
+
+.hw-preview-icon-large {
+    width: 90px;
+    height: 90px;
+    background: radial-gradient(circle, #3d1466 0%, #190a2e 100%);
+    border: 2px solid #ff7518;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(255, 117, 24, 0.4);
+}
+
+.hw-preview-icon-large svg {
+    width: 52px;
+    height: 52px;
+}
+
+.hw-preview-status {
+    font-size: 0.6em;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.hw-preview-status.locked { background: #331d1d; color: #ff5555; border: 1px solid #ff5555; }
+.hw-preview-status.available { background: #13331a; color: #39ff14; border: 1px solid #39ff14; }
+.hw-preview-status.claimed { background: #1c2638; color: #00ccff; border: 1px solid #00ccff; }
+
+.hw-preview-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.hw-btn-primary {
+    background: #ff7518;
+    color: #000;
+    border: 2px solid #ffd700;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 0.65em;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255, 117, 24, 0.5);
+    transition: all 0.2s;
+}
+
+.hw-btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(255, 117, 24, 0.8);
+}
+
+.hw-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #555;
+    border-color: #777;
+    color: #aaa;
+}
+
+/* Master Reward Complete Screen */
+#hw-master-reward-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(13, 0, 26, 0.95);
+    z-index: 3500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.hw-master-card {
+    background: radial-gradient(circle, #2d0442 0%, #0d001a 100%);
+    border: 4px solid #ffd700;
+    box-shadow: 0 0 60px rgba(255, 215, 0, 0.8), 0 0 100px rgba(147, 51, 234, 0.6);
+    border-radius: 20px;
+    padding: 35px 25px;
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    animation: hwMasterPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes hwMasterPop {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Quests / Missions View */
+.hw-quests-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+.hw-quest-card {
+    background: #190c2e;
+    border: 1px solid #4a2d6e;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    transition: border-color 0.2s;
+}
+
+.hw-quest-card.completed {
+    border-color: #39ff14;
+    background: #112015;
+}
+
+.hw-quest-info h4 {
+    margin: 0 0 6px 0;
+    font-size: 0.7em;
+    color: #ff9900;
+}
+
+.hw-quest-desc {
+    font-size: 0.55em;
+    color: #b8a89a;
+    margin: 0 0 8px 0;
+}
+
+.hw-quest-bar {
+    width: 220px;
+    height: 8px;
+    background: #090312;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #4a2d6e;
+}
+
+.hw-quest-bar-fill {
+    height: 100%;
+    background: #ff7518;
+    border-radius: 4px;
+}
+
+/* Lobby Card & Floating Button */
+.hw-lobby-pass-card {
+    margin: 16px auto 0 auto;
+    width: 90%;
+    max-width: 440px;
+    background: linear-gradient(135deg, #1f0b38 0%, #120424 100%);
+    border: 2px solid #ff7518;
+    border-radius: 14px;
+    padding: 14px 18px;
+    box-shadow: 0 0 20px rgba(255, 117, 24, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.hw-lobby-pass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(255, 117, 24, 0.6);
+}
+
+.hw-lobby-pass-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hw-lobby-pass-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75em;
+    color: #ff7518;
+    font-weight: bold;
+}
+
+.hw-lobby-pass-badge {
+    font-size: 0.55em;
+    color: #ffd700;
+    background: #361552;
+    border: 1px solid #ffd700;
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+.hw-pass-notify-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #39ff14;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #39ff14;
+    animation: hwPulseDot 1.2s infinite alternate;
+}
+
+@keyframes hwPulseDot {
+    0% { transform: scale(0.9); opacity: 0.7; }
+    100% { transform: scale(1.3); opacity: 1; }
+}
+
+/* Potato Mode */
+body.potato-mode #halloween-pass-overlay {
+    backdrop-filter: none;
+    background: #0d0517;
+}
+
+body.potato-mode .hw-pass-node,
+body.potato-mode .hw-biome-zone,
+body.potato-mode .hw-preview-card,
+body.potato-mode .hw-master-card,
+body.potato-mode .hw-lobby-pass-card {
+    box-shadow: none !important;
+    animation: none !important;
+}
+
+/* Responsive Overrides */
+@media (max-width: 900px) {
+    .hw-nodes-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .hw-pass-node.master-node {
+        grid-column: span 3;
+    }
+}
+
+@media (max-width: 600px) {
+    .hw-nodes-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+    .hw-nodes-grid::before {
+        display: none;
+    }
+    .hw-pass-node.master-node {
+        grid-column: span 2;
+    }
+    .hw-pass-header {
+        padding: 10px 14px;
+    }
+    .hw-pass-progress-box {
+        min-width: 100%;
+    }
+}

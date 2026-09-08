@@ -1,0 +1,100 @@
+:root {
+  --bg-main: #0a0510;
+  --bg-panel: #1a0f2e;
+  --bg-card: #2d1b4e;
+  --accent: #ff7518;
+  --accent-hover: #ff8c3a;
+  --accent-secondary: #9333ea;
+  --accent-tertiary: #8b0000;
+  --text-primary: #f5e6d3;
+  --text-secondary: #b8a89a;
+  --border: #4a2d6e;
+  --border-glow: rgba(147, 51, 234, 0.5);
+  --shadow: rgba(0, 0, 0, 0.8);
+  --radius: 12px;
+  --green-toxic: #39ff14;
+  
+  --hw-font-display: 'Cinzel', serif;
+}
+
+/* Base Overrides */
+body {
+  background: radial-gradient(circle at 50% 0%, #1a0f2e 0%, #0a0510 100%);
+  color: var(--text-primary);
+}
+
+h1, h2, h3, .hw-title {
+  font-family: var(--hw-font-display);
+  text-shadow: 0 2px 4px var(--shadow);
+}
+
+/* Atmospheric Effects */
+.hw-fog-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.4;
+}
+
+.hw-fog {
+  position: absolute;
+  width: 200vw;
+  height: 100vh;
+  background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+  animation: fog-drift 60s linear infinite;
+  opacity: 0.3;
+  filter: blur(2px) contrast(1.2);
+}
+
+.hw-fog.layer2 {
+  animation: fog-drift 40s linear infinite reverse;
+  opacity: 0.2;
+  transform: scale(1.5);
+}
+
+@keyframes fog-drift {
+  0% { background-position: 0 0; }
+  100% { background-position: -200vw 0; }
+}
+
+/* Modals & Panels */
+.modal-content, .panel, .container, .hw-panel {
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  box-shadow: 0 0 20px var(--border-glow), inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* Potato Mode overrides */
+body.potato-mode .hw-fog-container {
+  display: none;
+}
+body.potato-mode .modal-content,
+body.potato-mode .panel,
+body.potato-mode .container {
+  box-shadow: none;
+}
+
+/* Event Badge */
+.hw-event-badge {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-panel);
+  color: var(--accent);
+  padding: 5px 15px;
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6em;
+  box-shadow: 0 0 10px var(--border-glow);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

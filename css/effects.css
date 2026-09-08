@@ -1,0 +1,81 @@
+/* Efectos globales y partículas */
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleAnim 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes particleAnim {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--vx), var(--vy)) scale(0); opacity: 0; }
+}
+
+/* 👑 Top 1 Aura (SUPREME MASTER) */
+.supreme-master-aura {
+    position: relative;
+}
+
+.supreme-master-aura::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at center, transparent 30%, rgba(255,102,0,0.1) 80%, rgba(147,51,234,0.3) 100%);
+    pointer-events: none;
+    z-index: 1;
+    animation: breatheGold 4s infinite alternate;
+}
+
+@keyframes breatheGold {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.top-1-supreme .name {
+    color: var(--accent) !important;
+    text-shadow: 0 0 10px var(--accent), 0 0 20px #cc0000, 0 0 30px #5b21b6 !important;
+    animation: top1Glow 2s infinite alternate;
+    position: relative;
+}
+
+.top-1-supreme .name::after {
+    content: ' 🎃';
+    animation: floatCrown 2s infinite ease-in-out;
+    display: inline-block;
+}
+
+@keyframes top1Glow {
+    from { text-shadow: 0 0 5px var(--accent), 0 0 10px #cc0000; }
+    to { text-shadow: 0 0 20px var(--accent), 0 0 30px #cc0000, 0 0 40px #5b21b6; }
+}
+
+@keyframes floatCrown {
+    0%, 100% { transform: translateY(0) rotate(-10deg); }
+    50% { transform: translateY(-5px) rotate(10deg); }
+}
+
+/* Efectos de texto arcoiris y divino para rarezas */
+.rarity-secret {
+    background: linear-gradient(90deg, #9333ea, #ff6600, #cc0000, #39ff14, #9333ea);
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: rainbowShift 3s linear infinite;
+}
+
+.rarity-divine {
+    background: linear-gradient(90deg, #ffffff, #9333ea, #ffffff);
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: rainbowShift 2s linear infinite;
+    text-shadow: 0 0 20px rgba(147,51,234,0.5);
+}
+
+@keyframes rainbowShift {
+    to { background-position: 200% center; }
+}

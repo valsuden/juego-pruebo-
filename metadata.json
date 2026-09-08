@@ -1,0 +1,6 @@
+{
+  "name": "Trials of Mastery - Halloween Edition",
+  "description": "Retro spellcaster typing challenge with the full 25-level Halloween Pass adventure, seasonal quests, and mythical rewards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
