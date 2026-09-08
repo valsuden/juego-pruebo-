@@ -26,6 +26,7 @@ const BANNERS = [
   { id:'night_circuit',   name:'Night Circuit',     rarity:'Rare',      price:160,  css:'bn-circuit',   theme:'circuito / tecnología oscura' },
   { id:'halloween_haunt', name:'Halloween Haunt',   rarity:'Legendary', price:666,  css:'bn-halloween', theme:'calabazas / murciélagos / niebla' },
   { id:'halloween_throne',name:'Halloween Throne',  rarity:'Mythic',    price:999,  css:'bn-throne',    theme:'trono sombrío / oro maldito' },
+  { id:'witch_coven',     name:"Witch's Night",     rarity:'Mythic',    price:1200, css:'bn-witch',     theme:'bruja espectral / caldero púrpura / fuego fatuo' },
 ];
 
 const RARITY = {

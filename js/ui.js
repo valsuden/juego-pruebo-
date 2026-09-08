@@ -22,7 +22,11 @@ class UIManager {
         const startScreen = document.getElementById('start-screen');
         if (startScreen) {
             startScreen.addEventListener('click', () => {
-                startScreen.style.display = 'none';
+                startScreen.style.opacity = '0';
+                startScreen.style.pointerEvents = 'none';
+                setTimeout(() => {
+                    startScreen.style.display = 'none';
+                }, 320);
                 this.playSound('lobby');
                 this.playSound('lobby-seagulls');
             });

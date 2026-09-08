@@ -16,20 +16,32 @@ class EffectsSystem {
     }
 
     spawnParticles(x, y, count = 10, color = '#ff6600', type = 'normal') {
-        if (window.potatoMode) return;
+        if (window.potatoMode || localStorage.getItem('vfxEnabled') === 'false') return;
         
-        for(let i=0; i<count; i++) {
+        const perf = window.PerformanceManager;
+        const multiplier = perf ? perf.getParticleMultiplier() : 1.0;
+        if (multiplier <= 0) return;
+
+        const maxTotal = perf ? perf.getMaxParticles() : 30;
+        const currentTotal = this.container.children.length;
+        if (currentTotal >= maxTotal) return;
+
+        const realCount = Math.min(maxTotal - currentTotal, Math.max(1, Math.round(count * multiplier)));
+        
+        for(let i=0; i<realCount; i++) {
             const particle = document.createElement('div');
             particle.className = `particle ${type}`;
             particle.style.left = `${x}px`;
             particle.style.top = `${y}px`;
             particle.style.backgroundColor = color;
-            particle.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+            if (multiplier >= 0.5) {
+                particle.style.boxShadow = `0 0 8px ${color}`;
+            }
             
             const angle = Math.random() * Math.PI * 2;
-            const velocity = Math.random() * 50 + 20;
+            const velocity = Math.random() * 40 + 15;
             const vx = Math.cos(angle) * velocity;
-            const vy = Math.sin(angle) * velocity - 20;
+            const vy = Math.sin(angle) * velocity - 15;
             
             particle.style.setProperty('--vx', `${vx}px`);
             particle.style.setProperty('--vy', `${vy}px`);
@@ -38,62 +50,64 @@ class EffectsSystem {
             
             setTimeout(() => {
                 if(particle.parentNode) particle.remove();
-            }, 1000);
+            }, 800);
         }
     }
 
     playAura(type) {
-        if (window.potatoMode) return;
+        if (window.potatoMode || localStorage.getItem('vfxEnabled') === 'false') return;
         const body = document.body;
         body.classList.remove('aura-cosmic', 'aura-inferno', 'aura-divine');
         body.classList.add(`aura-${type}`);
         
         setTimeout(() => {
             body.classList.remove(`aura-${type}`);
-        }, 3000);
+        }, 2500);
     }
 
     /* ---- VFX: Pérdida de energía ---- */
     triggerEnergyLossVFX() {
-        if (localStorage.getItem('vfxEnabled') === 'false' || window.potatoMode) return;
-        // Flash rojo en pantalla
-        var flash = document.createElement('div');
+        if (localStorage.getItem('vfxEnabled') === 'false' || window.potatoMode) {
+            // Potato fallback: simple shake, zero extra DOM nodes created
+            const cont = document.querySelector('.container');
+            if (cont) {
+                cont.classList.add('shake');
+                setTimeout(() => cont.classList.remove('shake'), 300);
+            }
+            return;
+        }
+
+        // Lightweight Flash
+        const flash = document.createElement('div');
         flash.className = 'energy-loss-flash';
         document.body.appendChild(flash);
-        setTimeout(function () { flash.remove(); }, 500);
-
-        // Icono flotante
-        var icon = document.createElement('div');
-        icon.className = 'energy-loss-icon';
-        icon.innerHTML = `<span class="hw-icon-placeholder" data-icon="energy_empty">${window.HWIcon ? window.HWIcon('energy_empty') : ''}</span>`;
-        document.body.appendChild(icon);
-        setTimeout(function () { icon.remove(); }, 800);
+        setTimeout(() => flash.remove(), 400);
 
         // Shake del contenedor
-        var cont = document.querySelector('.container');
+        const cont = document.querySelector('.container');
         if (cont) {
             cont.classList.add('shake');
-            setTimeout(function () { cont.classList.remove('shake'); }, 500);
+            setTimeout(() => cont.classList.remove('shake'), 400);
         }
     }
 
     /* ---- VFX: Respuesta correcta (confetti mini) ---- */
     triggerCorrectVFX() {
         if (localStorage.getItem('vfxEnabled') === 'false' || window.potatoMode) return;
-        var colors = ['#ff6600', '#9333ea', '#39ff14', '#cc0000', '#f5e6d3'];
-        for (var i = 0; i < 8; i++) {
-            (function (idx) {
-                setTimeout(() => {
-                    var p = document.createElement('div');
-                    p.className = 'confetti-particle';
-                    p.style.cssText = 'left:' + (40 + Math.random() * 20) + '%; top:50%;' +
-                        'background:' + colors[Math.floor(Math.random() * colors.length)] + ';' +
-                        '--cx:' + (Math.random() * 80 - 40) + 'px;' +
-                        'box-shadow: 0 0 4px ' + colors[Math.floor(Math.random() * colors.length)];
-                    document.body.appendChild(p);
-                    setTimeout(function () { p.remove(); }, 700);
-                }, idx * 40);
-            })(i);
+        
+        const perf = window.PerformanceManager;
+        const multiplier = perf ? perf.getParticleMultiplier() : 1.0;
+        if (multiplier <= 0) return;
+
+        const count = multiplier < 0.6 ? 3 : 6;
+        const colors = ['#ff6600', '#9333ea', '#39ff14', '#ffd700'];
+        
+        for (let i = 0; i < count; i++) {
+            const p = document.createElement('div');
+            p.className = 'confetti-particle';
+            p.style.cssText = `left:${42 + Math.random() * 16}%; top:48%; background:${colors[i % colors.length]}; --cx:${Math.random() * 60 - 30}px;`;
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 600);
         }
     }
 }

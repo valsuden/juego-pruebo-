@@ -384,6 +384,16 @@ const RUNES = [
         css: 'rn-mythic',
         glyph: '⏪'
     },
+    {
+        id: 'rune_witch_soul',
+        category: 'Gameplay',
+        name: "Witch's Soul",
+        description: "The coven's eternal flame blesses your trial. (+25 seconds, restore all lives, and double points for 20s)",
+        rarity: 'Mythic',
+        price: 3500,
+        css: 'rn-mythic',
+        glyph: '🧙‍♀️'
+    },
 
     // SECRET RUNE
     {

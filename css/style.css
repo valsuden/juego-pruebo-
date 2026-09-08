@@ -240,25 +240,63 @@ h3 {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
+    background: radial-gradient(circle at center, rgba(32, 12, 54, 0.96) 0%, rgba(8, 3, 15, 0.98) 100%);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 3000;
     cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: opacity 0.35s ease-out, visibility 0.35s;
+    user-select: none;
+    -webkit-user-select: none;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 #start-screen-content {
-    font-size: 1.5em;
-    color: var(--accent);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    animation: pulse 2s infinite;
+    animation: hwPulseText 2.2s infinite ease-in-out;
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+.start-pumpkin-icon {
+    font-size: 3rem;
+    margin-bottom: 14px;
+    filter: drop-shadow(0 0 16px rgba(255, 117, 24, 0.75));
+    animation: hwFloatPumpkin 3s ease-in-out infinite alternate;
+}
+
+.start-title-text {
+    font-family: 'Cinzel', serif;
+    font-size: 1.6em;
+    color: #ff7518;
+    text-shadow: 0 0 15px rgba(255, 117, 24, 0.6);
+    letter-spacing: 2px;
+}
+
+.start-subtext {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.55em;
+    color: #c084fc;
+    margin-top: 14px;
+    letter-spacing: 1px;
+    opacity: 0.85;
+}
+
+@keyframes hwPulseText {
+    0%, 100% { transform: scale(1); opacity: 0.95; }
+    50% { transform: scale(1.03); opacity: 1; }
+}
+
+@keyframes hwFloatPumpkin {
+    0% { transform: translateY(0) rotate(-3deg); }
+    100% { transform: translateY(-8px) rotate(3deg); }
 }
 
 .game-image {
@@ -313,47 +351,27 @@ h3 {
     to { bottom: 20px; opacity: 1; }
 }
 
+/* Top Bar Base layout and container spacing */
+body {
+    padding-top: 60px;
+    box-sizing: border-box;
+}
+
+.container {
+    margin: 20px auto;
+}
+
 @media (max-width: 600px) {
-    #mobile-top-bar {
-        display: flex !important;
-        background: rgba(255, 255, 255, 0.15) !important;
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.35);
-        padding: 6px 8px;
-        box-sizing: border-box;
-        align-items: center;
-        gap: 5px;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        pointer-events: auto !important;
+    body {
+        padding-top: 56px;
     }
-
-    #settings-btn { position: static !important; flex: 0 0 auto; }
-    #historia-btn { position: static !important; flex: 0 0 auto; left: unset !important; }
-    #shop-hud { position: static !important; flex: 0 0 auto; top: unset !important; right: unset !important; }
-
-    .container { margin-top: 65px; width: 95%; padding: 15px; border-width: 4px !important; }
-    #settings-btn { font-size: 0.55em !important; padding: 7px 9px !important; white-space: nowrap; }
-    #historia-btn { font-size: 0.55em !important; padding: 7px 9px !important; white-space: nowrap; }
-    #shop-hud { margin-left: auto; }
+    .container {
+        margin-top: 15px;
+        width: 95%;
+        padding: 15px;
+        border-width: 3px !important;
+    }
 }
-
-#mobile-top-bar {
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1100;
-    background: transparent;
-    pointer-events: none;
-}
-
-#mobile-top-bar > * { pointer-events: auto; }
-#mobile-top-bar::-webkit-scrollbar { display: none; }
-#mobile-top-bar { scrollbar-width: none; }
 
 .ft-overlay {
     display: none;
@@ -477,34 +495,56 @@ h3 {
     cursor: pointer;
 }
 
-body.potato-mode * {
+/* Potato Mode Targeted Optimization (No Universal Selector to prevent style recalc spikes) */
+body.potato-mode .modal-content,
+body.potato-mode .panel,
+body.potato-mode .container,
+body.potato-mode .hw-panel,
+body.potato-mode .config-modal-panel,
+body.potato-mode #mobile-top-bar,
+body.potato-mode .wheel-container-outer,
+body.potato-mode .wheel-reveal-card,
+body.potato-mode .wheel-lobby-card,
+body.potato-mode #halloween-pass-overlay,
+body.potato-mode .hw-pass-node,
+body.potato-mode .hw-lobby-pass-card,
+body.potato-mode .inventory-card,
+body.potato-mode .shop-card,
+body.potato-mode .btn,
+body.potato-mode .top-nav-btn {
     backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     filter: none !important;
     box-shadow: none !important;
     text-shadow: none !important;
-    transition: transform 0.1s, opacity 0.1s !important;
+    animation: none !important;
 }
 
 body.potato-mode .background-animation, 
 body.potato-mode .hw-atmosphere,
-.potato-mode .hw-moon,
-.potato-mode .hw-fog,
-.potato-mode .hw-fog-front {
+body.potato-mode .hw-moon,
+body.potato-mode .hw-fog,
+body.potato-mode .hw-fog-front,
+body.potato-mode .wheel-atmosphere-glow,
+body.potato-mode .wheel-cauldron-backdrop,
+body.potato-mode .supreme-master-aura::before {
     display: none !important;
 }
 
 body.potato-mode {
+    background: #0d0517 !important;
     background-image: none !important;
 }
 
-/* Permitir algunas sombras en elementos clave para que no se vea TAN feo */
+/* Bordes limpios Halloween Lite en Potato Mode para estética cuidada sin costo de GPU */
 body.potato-mode .container {
-    box-shadow: 0 0 5px rgba(0,0,0,0.5) !important;
-    border: 1px solid #444 !important;
+    border: 2px solid #ff7518 !important;
+    box-shadow: none !important;
 }
 
 body.potato-mode .btn {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5) !important;
+    border: 1px solid #ff7518 !important;
+    box-shadow: none !important;
 }
 /* Evitar selección de texto en las palabras a traducir y en las respuestas correctas */
 #word-to-translate,

@@ -152,6 +152,14 @@
             const setupSection = document.getElementById('player-setup');
             if (setupSection) setupSection.classList.add('hidden');
 
+            const passMount = document.getElementById('hw-lobby-pass-mount');
+            if (passMount) passMount.classList.add('hidden');
+            const wheelMount = document.getElementById('hw-lobby-wheel-mount');
+            if (wheelMount) wheelMount.classList.add('hidden');
+
+            const top3Display = document.getElementById('top3-display');
+            if (top3Display) top3Display.classList.add('hidden');
+
             const startBtn = document.getElementById('start-btn');
             if (startBtn) startBtn.classList.add('hidden');
 
@@ -169,6 +177,11 @@
 
             // Reset state
             if (typeof resetRuneState === 'function') resetRuneState();
+
+            this.isPlaying = true;
+            if (window.PerformanceManager) {
+                window.PerformanceManager.setContext('Gameplay');
+            }
 
             this.errorCount = 0;
             this.sessionMistakeWords = new Set();
@@ -241,6 +254,9 @@
                 // Game completed
                 clearInterval(this.timerInterval);
                 this.isPlaying = false;
+                if (window.PerformanceManager) {
+                    window.PerformanceManager.setContext('Lobby');
+                }
                 if (typeof Users !== 'undefined' && Users.current && Users.data) {
                     Users.updateHighScore(this.score);
                     Users.data.maxStreak = Math.max(Users.data.maxStreak || 0, this.maxStreak);
@@ -258,6 +274,14 @@
 
                 const setupSection = document.getElementById('player-setup');
                 if (setupSection) setupSection.classList.remove('hidden');
+
+                const passMount = document.getElementById('hw-lobby-pass-mount');
+                if (passMount) passMount.classList.remove('hidden');
+                const wheelMount = document.getElementById('hw-lobby-wheel-mount');
+                if (wheelMount) wheelMount.classList.remove('hidden');
+
+                const top3Display = document.getElementById('top3-display');
+                if (top3Display) top3Display.classList.remove('hidden');
 
                 const startBtn = document.getElementById('start-btn');
                 if (startBtn) startBtn.classList.remove('hidden');
@@ -936,6 +960,9 @@
 
         gameOver() {
             this.isPlaying = false;
+            if (window.PerformanceManager) {
+                window.PerformanceManager.setContext('Lobby');
+            }
             const viewLB = document.getElementById('view-leaderboard-start');
             if (viewLB) viewLB.classList.remove('hidden');
 
@@ -1021,6 +1048,14 @@
 
             const setupSection = document.getElementById('player-setup');
             if (setupSection) setupSection.classList.remove('hidden');
+
+            const passMount = document.getElementById('hw-lobby-pass-mount');
+            if (passMount) passMount.classList.remove('hidden');
+            const wheelMount = document.getElementById('hw-lobby-wheel-mount');
+            if (wheelMount) wheelMount.classList.remove('hidden');
+
+            const top3Display = document.getElementById('top3-display');
+            if (top3Display) top3Display.classList.remove('hidden');
 
             const startBtn = document.getElementById('start-btn');
             if (startBtn) startBtn.classList.remove('hidden');
@@ -1282,6 +1317,11 @@
             if (gameContainer) gameContainer.classList.add('hidden');
             const setupSection = document.getElementById('player-setup');
             if (setupSection) setupSection.classList.remove('hidden');
+            const passMount = document.getElementById('hw-lobby-pass-mount');
+            if (passMount) passMount.classList.remove('hidden');
+            const wheelMount = document.getElementById('hw-lobby-wheel-mount');
+            if (wheelMount) wheelMount.classList.remove('hidden');
+            if (top3Display) top3Display.classList.remove('hidden');
             const startBtn = document.getElementById('start-btn');
             if (startBtn) startBtn.classList.remove('hidden');
             const headerImage = document.getElementById('game-header-image');

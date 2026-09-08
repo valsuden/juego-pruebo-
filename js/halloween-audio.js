@@ -18,6 +18,9 @@ const HWAudio = {
     game: null   // Will reference DOM element
   },
 
+  _pools: {},
+  _poolIndices: {},
+
   init() {
     this.music.lobby = document.getElementById('lobby-music');
     this.music.game = document.getElementById('background-music');
@@ -29,12 +32,51 @@ const HWAudio = {
     if (this.music.lobby) {
        this.music.lobby.volume = this.musicVolume;
     }
+
+    // Pre-initialize pools for low latency & 0 garbage collection pauses
+    Object.keys(this.sfx).forEach(name => {
+      this._pools[name] = [
+        this.sfx[name],
+        this.sfx[name].cloneNode()
+      ];
+      this._poolIndices[name] = 0;
+    });
+
+    // Pause music when tab is hidden to save battery & CPU
+    window.addEventListener('tom:visibilitySuspended', () => {
+      if (this.music.lobby && !this.music.lobby.paused) {
+        this._wasPlayingLobby = true;
+        this.music.lobby.pause();
+      }
+      if (this.music.game && !this.music.game.paused) {
+        this._wasPlayingGame = true;
+        this.music.game.pause();
+      }
+    });
+
+    window.addEventListener('tom:visibilityResumed', () => {
+      if (this.enabled) {
+        if (this._wasPlayingLobby && this.music.lobby) {
+          this.music.lobby.play().catch(() => {});
+          this._wasPlayingLobby = false;
+        }
+        if (this._wasPlayingGame && this.music.game) {
+          this.music.game.play().catch(() => {});
+          this._wasPlayingGame = false;
+        }
+      }
+    });
   },
 
   updateVolumes() {
     Object.values(this.sfx).forEach(audio => {
       audio.volume = this.volume;
     });
+    if (this._pools) {
+      Object.values(this._pools).forEach(pool => {
+        pool.forEach(audio => { audio.volume = this.volume; });
+      });
+    }
     if (this.music.lobby) this.music.lobby.volume = this.musicVolume;
     if (this.music.game) this.music.game.volume = this.musicVolume;
   },
@@ -42,13 +84,22 @@ const HWAudio = {
   play(soundName) {
     if (!this.enabled || !this.sfx[soundName]) return;
     
-    // Clone node to allow overlapping sounds
-    const sound = this.sfx[soundName].cloneNode();
+    // Use pre-allocated audio pool instead of cloneNode() to prevent GC micro-stutter
+    if (!this._pools[soundName]) {
+      this._pools[soundName] = [this.sfx[soundName], this.sfx[soundName].cloneNode()];
+      this._poolIndices[soundName] = 0;
+    }
+
+    const pool = this._pools[soundName];
+    const idx = this._poolIndices[soundName] || 0;
+    this._poolIndices[soundName] = (idx + 1) % pool.length;
+
+    const sound = pool[idx];
     sound.volume = this.volume;
+    sound.currentTime = 0;
     
     sound.play().catch(e => {
-        // Ignore playback errors (e.g., user hasn't interacted yet)
-        console.warn("Audio play blocked:", e);
+        // Handled silently for un-interacted states
     });
   },
   

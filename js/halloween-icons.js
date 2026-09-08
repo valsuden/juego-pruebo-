@@ -14,7 +14,12 @@ const HWIcons = {
   pumpkin: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff7518" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="13" rx="9" ry="8"></ellipse><path d="M12 5V2c1.5 0 2.5 1 3 2"></path><path d="M9 11l1 2"></path><path d="M15 11l-1 2"></path><path d="M8 16c1.5 1.5 3 2 4 2s2.5-.5 4-2"></path><path d="M12 5c-3 2-4 5-4 8s1 6 4 8"></path><path d="M12 5c3 2 4 5 4 8s-1 6-4 8"></path></svg>`,
   check: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#39ff14" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
   lock: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`,
-  spark: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path></svg>`
+  spark: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path></svg>`,
+  cauldron: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16"></path><path d="M5 10c0 6 3 10 7 10s7-4 7-10"></path><path d="M7 6c0-2 2-3 2-3"></path><path d="M12 6c0-2 2-3 2-3"></path><path d="M17 6c0-2 2-3 2-3"></path><circle cx="6" cy="20" r="1"></circle><circle cx="18" cy="20" r="1"></circle></svg>`,
+  wheel: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff7518" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="9"></line><line x1="12" y1="15" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="9.88" y2="9.88"></line><line x1="14.12" y1="14.12" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="9" y2="12"></line><line x1="15" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="9.88" y2="14.12"></line><line x1="14.12" y1="9.88" x2="19.07" y2="4.93"></line></svg>`,
+  witch: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 19h20"></path><path d="M4 19L11 4l4 9 5 6"></path><path d="M8 15h8"></path><circle cx="12" cy="7" r="1"></circle></svg>`,
+  star: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffd700" stroke="#ffd700" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`,
+  info: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`
 };
 
 HWIcons.energy = HWIcons.gem;
@@ -34,11 +39,17 @@ window.HWIcon = function(name, className = '') {
   return svg;
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.hw-icon-placeholder').forEach(el => {
-    const iconName = el.getAttribute('data-icon');
-    if (iconName) {
-      el.innerHTML = window.HWIcon(iconName);
+window.renderHWIcons = function(root = document) {
+  root.querySelectorAll('.hw-icon-placeholder').forEach(el => {
+    if (!el.firstElementChild) {
+      const iconName = el.getAttribute('data-icon');
+      if (iconName) {
+        el.innerHTML = window.HWIcon(iconName);
+      }
     }
   });
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.renderHWIcons();
 });

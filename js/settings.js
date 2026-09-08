@@ -6,6 +6,18 @@
 // applySettings — Apply a settings object to the UI and audio elements.
 // Exposed globally so it can be called from Users.load() after cloud sync.
 // ---------------------------------------------------------------------------
+function _updateToggleState(btn, isOn) {
+    if (!btn) return;
+    // Clear legacy inline styles that might break CSS themes
+    btn.style.background = '';
+    btn.style.color = '';
+    
+    btn.classList.toggle('is-on', !!isOn);
+    btn.classList.toggle('is-off', !isOn);
+    btn.setAttribute('aria-checked', isOn ? 'true' : 'false');
+    btn.innerHTML = `<span class="toggle-indicator"></span><span class="toggle-text">${isOn ? 'ON' : 'OFF'}</span>`;
+}
+
 window.applySettings = function (settings) {
     settings = settings || {};
 
@@ -30,26 +42,15 @@ window.applySettings = function (settings) {
         document.body.classList.remove('potato-mode');
     }
 
-    // Update toggle button labels if they exist
-    const toggleMusicBtn = document.getElementById('toggle-music-btn');
-    if (toggleMusicBtn) {
-        toggleMusicBtn.textContent       = musicEnabled ? 'ON' : 'OFF';
-        toggleMusicBtn.style.background  = musicEnabled ? 'var(accent)' : 'transparent';
-        toggleMusicBtn.style.color       = musicEnabled ? 'var(bg-main)' : 'var(text-primary)';
-    }
+    // Update toggle buttons with clean state classes
+    _updateToggleState(document.getElementById('toggle-music-btn'), musicEnabled);
+    _updateToggleState(document.getElementById('toggle-vfx-btn'), vfxEnabled);
+    _updateToggleState(document.getElementById('toggle-potato-btn'), potatoEnabled);
 
-    const toggleVfxBtn = document.getElementById('toggle-vfx-btn');
-    if (toggleVfxBtn) {
-        toggleVfxBtn.textContent       = vfxEnabled ? 'ON' : 'OFF';
-        toggleVfxBtn.style.background  = vfxEnabled ? 'var(accent)' : 'transparent';
-        toggleVfxBtn.style.color       = vfxEnabled ? 'var(bg-main)' : 'var(text-primary)';
-    }
-
-    const togglePotatoBtn = document.getElementById('toggle-potato-btn');
-    if (togglePotatoBtn) {
-        togglePotatoBtn.textContent       = potatoEnabled ? 'ON' : 'OFF';
-        togglePotatoBtn.style.background  = potatoEnabled ? 'var(accent)' : 'transparent';
-        togglePotatoBtn.style.color       = potatoEnabled ? 'var(bg-main)' : 'var(text-primary)';
+    // Update graphics quality select
+    const graphicsSelect = document.getElementById('graphics-quality-select');
+    if (graphicsSelect) {
+        graphicsSelect.value = graphicsQuality;
     }
 };
 
@@ -116,6 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Re-apply current settings when opening the panel so toggles are in sync
             window.applySettings(_getSettings());
             settingsOverlay.style.display = 'flex';
+            if (typeof window.renderHWIcons === 'function') {
+                window.renderHWIcons(settingsOverlay);
+            }
             settingsBtn.style.transform   = 'rotate(90deg)';
             setTimeout(() => { settingsBtn.style.transform = 'rotate(0deg)'; }, 200);
         });
@@ -126,6 +130,26 @@ document.addEventListener('DOMContentLoaded', () => {
             settingsOverlay.style.display = 'none';
         });
     }
+
+    if (settingsOverlay) {
+        settingsOverlay.addEventListener('click', (e) => {
+            if (e.target === settingsOverlay) {
+                settingsOverlay.style.display = 'none';
+            }
+        });
+    }
+
+    // Escape key listener for settings and terms modals
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (settingsOverlay && settingsOverlay.style.display !== 'none') {
+                settingsOverlay.style.display = 'none';
+            }
+            if (termsOverlay && termsOverlay.style.display !== 'none') {
+                hideTerms();
+            }
+        }
+    });
 
     // Music toggle
     if (toggleMusicBtn) {
@@ -164,10 +188,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (graphicsSelect) {
         graphicsSelect.value = _getSettings().graphicsQuality || 'auto';
         graphicsSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
             const s = _getSettings();
-            s.graphicsQuality = e.target.value;
+            s.graphicsQuality = val;
             _saveSettings(s);
-            window.applySettings(s);
+            if (window.PerformanceManager) {
+                window.PerformanceManager.setProfile(val, true);
+            } else {
+                window.applySettings(s);
+            }
         });
     }
 

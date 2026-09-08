@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trials of Mastery - Halloween Edition</title>
-    <meta name="description" content="Retro spellcaster typing challenge with the full 25-level Halloween Pass adventure, seasonal quests, and mythical rewards.">
+    <meta name="description" content="Retro spellcaster typing challenge with the full 25-level Halloween Pass adventure, Witch's Wheel summoning system, seasonal quests, and mythical rewards.">
     <!-- Google Fonts preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="css/shop.css">
     <link rel="stylesheet" href="css/notes.css">
     <link rel="stylesheet" href="css/halloween_pass.css">
+    <link rel="stylesheet" href="css/halloween_wheel.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap">
 </head>
 
@@ -29,39 +30,74 @@
         <div class="hw-fog-front"></div>
     </div>
     
-    <!-- Event Badge -->
-    <div class="hw-event-badge">
-        <span class="hw-icon-placeholder" data-icon="pumpkin"></span>
-        HALLOWEEN EVENT
-    </div>
-
-    <!-- Barra superior unificada (visible solo en móvil via CSS) -->
-    <div id="mobile-top-bar">
-        <button id="settings-btn"
-            style="position: fixed; top: 15px; left: 15px; z-index: 1000; padding: 12px; font-size: 0.7em; background: var(--bg-card); color: var(--accent); border: 2px solid var(--border); border-radius: 12px; font-weight: bold; font-family: 'Press Start 2P', cursive; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); transition: all 0.2s;">
-            <span class="hw-icon-placeholder" data-icon="settings"></span> CONFIG</button>
-        <button id="historia-btn"
-            style="display: none; position: fixed; top: 15px; left: 180px; z-index: 1000; padding: 12px; font-size: 0.7em; background: var(--bg-card); color: var(--accent); border: 2px solid var(--border); border-radius: 12px; font-weight: bold; font-family: 'Press Start 2P', cursive; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); transition: all 0.2s;">
-            <span class="hw-icon-placeholder" data-icon="history"></span> HISTORIA</button>
-        <!-- HUD top-right: Arcane Coins + Shop (moved into bar for mobile) -->
-        <div id="shop-hud" style="display:none;">
-            <div class="hud-coins-box">
-                <span class="hw-icon-placeholder coin-icon" data-icon="coins"></span>
-                <span id="hud-coins-val">0</span><span class="hud-coins-text"> Arcane Coins</span>
-            </div>
-            <button class="hud-shop-btn hw-btn" id="hud-shop-btn"><span class="hw-icon-placeholder" data-icon="shop"></span> SHOP</button>
-            <button class="hud-shop-btn hw-btn" id="hud-inventory-btn"
-                style="margin-left: 10px;"><span class="hw-icon-placeholder" data-icon="inventory"></span>
-                INV</button>
-            <button class="hud-shop-btn hw-btn" id="btn-notas"
-                style="margin-left: 10px;"><span class="hw-icon-placeholder" data-icon="notes"></span>
-                NOTAS</button>
+    <!-- Barra superior unificada y organizada -->
+    <header id="mobile-top-bar" class="game-top-bar">
+        <div class="top-bar-left">
+            <button id="settings-btn" class="top-nav-btn" title="Configuración de audio, gráficos y rendimiento">
+                <span class="hw-icon-placeholder" data-icon="settings"></span>
+                <span class="btn-label">CONFIG</span>
+            </button>
+            <button id="historia-btn" class="top-nav-btn" style="display: none;" title="Historia del Reino">
+                <span class="hw-icon-placeholder" data-icon="history"></span>
+                <span class="btn-label">HISTORIA</span>
+            </button>
+            <button id="hw-topbar-pass-btn" class="top-nav-btn pass-btn" title="Abrir Halloween Pass de 25 niveles">
+                <span class="hw-icon-placeholder" data-icon="pumpkin"></span>
+                <span class="btn-label">PASS</span>
+                <span class="hw-pass-notify-dot" id="hw-topbar-dot" style="display:none;"></span>
+            </button>
+            <button id="hw-topbar-wheel-btn" class="top-nav-btn pass-btn" title="Ruleta de la Bruja (Witch's Wheel)">
+                <span class="hw-icon-placeholder" data-icon="cauldron"></span>
+                <span class="btn-label">WHEEL</span>
+            </button>
         </div>
-    </div>
+
+        <div class="top-bar-center">
+            <!-- Event Badge -->
+            <div class="hw-event-badge" id="hw-event-badge" title="Halloween Pass & Witch's Wheel">
+                <span class="hw-icon-placeholder" data-icon="pumpkin"></span>
+                <span class="event-badge-text">HALLOWEEN EVENT</span>
+            </div>
+        </div>
+
+        <!-- HUD top-right: Coins + Shop + Inventory + Notes + Leaderboard -->
+        <div class="top-bar-right" id="shop-hud">
+            <div class="hud-coins-box" title="Monedas Arcanas">
+                <span class="hw-icon-placeholder coin-icon" data-icon="coins"></span>
+                <span id="hud-coins-val">0</span>
+            </div>
+            <div class="hud-coins-box hw-event-coins" id="hud-hw-coins-box" title="Halloween Coins">
+                <span class="hw-icon-placeholder" data-icon="pumpkin"></span>
+                <span id="hud-hw-coins-val">0</span>
+            </div>
+            <button class="top-nav-btn hud-shop-btn" id="hud-wheel-btn" title="Ruleta de la Bruja (Invocación de Halloween)">
+                <span class="hw-icon-placeholder" data-icon="wheel"></span>
+                <span class="btn-label">RULETA</span>
+            </button>
+            <button class="top-nav-btn hud-shop-btn" id="hud-shop-btn" title="Tienda de Estandartes y Runas">
+                <span class="hw-icon-placeholder" data-icon="shop"></span>
+                <span class="btn-label">SHOP</span>
+            </button>
+            <button class="top-nav-btn hud-shop-btn" id="hud-inventory-btn" title="Tu Inventario de Runas">
+                <span class="hw-icon-placeholder" data-icon="inventory"></span>
+                <span class="btn-label">INV</span>
+            </button>
+            <button class="top-nav-btn hud-shop-btn" id="btn-notas" title="Notas del Reino y Comunidad">
+                <span class="hw-icon-placeholder" data-icon="notes"></span>
+                <span class="btn-label">NOTAS</span>
+            </button>
+            <button class="top-nav-btn hud-shop-btn" id="hud-lb-btn" title="Hall of Champions (Clasificación)">
+                <span class="hw-icon-placeholder" data-icon="leaderboard"></span>
+                <span class="btn-label">TOP</span>
+            </button>
+        </div>
+    </header>
     <!-- Start screen for audio initialization -->
     <div id="start-screen">
         <div id="start-screen-content" class="hw-title">
-            Tap to enter the realm...
+            <div class="start-pumpkin-icon">🎃</div>
+            <div class="start-title-text">Tap to enter the realm...</div>
+            <div class="start-subtext">[ CLICK ANYWHERE TO AWAKEN AUDIO ]</div>
         </div>
     </div>
 
@@ -110,6 +146,12 @@
             </select>
             <div class="highest-score">Highest Score: <span id="highest-score">78</span></div>
         </div>
+
+        <!-- Halloween Pass Lobby Progress Mount -->
+        <div id="hw-lobby-pass-mount"></div>
+
+        <!-- Halloween Witch's Wheel Lobby Mount -->
+        <div id="hw-lobby-wheel-mount"></div>
 
         <button id="start-btn" class="btn hw-btn">ENTER TRIAL</button>
         <div
@@ -716,6 +758,7 @@
     <script src="js/halloween-icons.js"></script>
     <script src="js/halloween-audio.js"></script>
     <script src="js/config.js"></script>
+    <script src="js/performance.js"></script>
     <script src="data/students.js"></script>
     <script src="data/banners.js"></script>
     <script src="data/runes.js"></script>
@@ -759,53 +802,93 @@
     <!-- UX/VFX logic now handled by js/effects.js, js/users.js -->
 
     <!-- Settings and Terms Modals -->
-    <div id="settings-overlay"
-        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index:3000; justify-content:center; align-items:center;">
-        <div class="hw-panel"
-            style="border-radius:15px; width:80%; max-width:320px; padding:20px; font-family:'Press Start 2P', cursive; text-align:center;">
-            <button id="close-settings" class="close-btn hw-btn"
-                style="float:right; font-size:1.5em; cursor:pointer; margin-top:-10px; font-family:sans-serif;">×</button>
-            <h2 class="hw-title" style="font-size:1em;"><span class="hw-icon-placeholder" data-icon="settings"></span> CONFIG</h2>
+    <div id="settings-overlay" class="config-modal-overlay" style="display:none;">
+        <div class="config-modal-panel hw-panel">
+            <button id="close-settings" class="config-close-btn" aria-label="Cerrar ajustes" title="Cerrar">×</button>
 
-            <div style="margin:20px 0; display:flex; flex-direction:column; gap:15px;">
-                <label
-                    style="font-size:0.7em; display:flex; align-items:center; justify-content:space-between; width: 100%;">
-                    <span>Música:</span>
-                    <button id="toggle-music-btn" class="hw-btn"
-                        style="padding:8px 15px; border-radius:8px; font-family:'Press Start 2P', cursive; cursor:pointer; font-weight:bold;">ON</button>
-                </label>
-
-                <label
-                    style="font-size:0.7em; display:flex; align-items:center; justify-content:space-between; width: 100%;">
-                    <span>VFX/Luces:</span>
-                    <button id="toggle-vfx-btn" class="hw-btn"
-                        style="padding:8px 15px; border-radius:8px; font-family:'Press Start 2P', cursive; cursor:pointer; font-weight:bold;">ON</button>
-                </label>
-
-                <label
-                    style="font-size:0.7em; display:flex; align-items:center; justify-content:space-between; width: 100%;">
-                    <span>Potato Mode:</span>
-                    <button id="toggle-potato-btn" class="hw-btn"
-                        style="padding:8px 15px; border-radius:8px; font-family:'Press Start 2P', cursive; cursor:pointer; font-weight:bold;">OFF</button>
-                </label>
-                
-                <label
-                    style="font-size:0.7em; display:flex; align-items:center; justify-content:space-between; width: 100%;">
-                    <span>Calidad:</span>
-                    <select id="graphics-quality-select" class="hw-btn" style="font-size:0.8em; padding: 5px;">
-                        <option value="auto">Auto</option>
-                        <option value="ultra">Ultra</option>
-                        <option value="high">High</option>
-                        <option value="medium">Medium</option>
-                        <option value="potato">Potato</option>
-                    </select>
-                </label>
+            <div class="config-header">
+                <div class="config-header-icon">
+                    <span class="hw-icon-placeholder" data-icon="settings"></span>
+                </div>
+                <div class="config-header-text">
+                    <h2 class="config-title">CONFIGURACIÓN</h2>
+                    <span class="config-subtitle">Ajustes del Sistema & Rendimiento</span>
+                </div>
             </div>
 
-            <div style="margin-top:40px;">
-                <span id="terms-link"
-                    style="font-size:0.55em; text-decoration:none; border-bottom:1px dashed var(--accent); cursor:pointer; color:var(--accent); transition: color 0.2s; text-shadow:0 0 5px var(--border-glow);">Terms
-                    & Conditions</span>
+            <div class="config-options-list">
+                <!-- Row: Música -->
+                <div class="config-option-row">
+                    <div class="config-option-info">
+                        <div class="config-option-name">
+                            <span class="config-option-icon">🎵</span>
+                            <span>Música</span>
+                        </div>
+                        <span class="config-option-desc">Banda sonora del reino</span>
+                    </div>
+                    <button id="toggle-music-btn" class="config-toggle-btn" role="switch" aria-checked="true" aria-label="Alternar música">
+                        <span class="toggle-indicator"></span>
+                        <span class="toggle-text">ON</span>
+                    </button>
+                </div>
+
+                <!-- Row: VFX/Luces -->
+                <div class="config-option-row">
+                    <div class="config-option-info">
+                        <div class="config-option-name">
+                            <span class="config-option-icon">✨</span>
+                            <span>VFX / Luces</span>
+                        </div>
+                        <span class="config-option-desc">Partículas y resplandor arcano</span>
+                    </div>
+                    <button id="toggle-vfx-btn" class="config-toggle-btn" role="switch" aria-checked="true" aria-label="Alternar efectos de luz">
+                        <span class="toggle-indicator"></span>
+                        <span class="toggle-text">ON</span>
+                    </button>
+                </div>
+
+                <!-- Row: Potato Mode -->
+                <div class="config-option-row">
+                    <div class="config-option-info">
+                        <div class="config-option-name">
+                            <span class="config-option-icon">🥔</span>
+                            <span>Potato Mode</span>
+                        </div>
+                        <span class="config-option-desc">Máximo rendimiento (FPS)</span>
+                    </div>
+                    <button id="toggle-potato-btn" class="config-toggle-btn" role="switch" aria-checked="false" aria-label="Alternar Potato Mode">
+                        <span class="toggle-indicator"></span>
+                        <span class="toggle-text">OFF</span>
+                    </button>
+                </div>
+
+                <!-- Row: Calidad Gráfica -->
+                <div class="config-option-row">
+                    <div class="config-option-info">
+                        <div class="config-option-name">
+                            <span class="config-option-icon">🎨</span>
+                            <span>Calidad</span>
+                        </div>
+                        <span class="config-option-desc">Resolución y sombreado</span>
+                    </div>
+                    <div class="config-select-wrapper">
+                        <select id="graphics-quality-select" class="config-quality-select" aria-label="Calidad gráfica">
+                            <option value="auto">Auto</option>
+                            <option value="ultra">Ultra</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="potato">Potato</option>
+                        </select>
+                        <span class="config-select-arrow">▼</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-footer">
+                <button id="terms-link" class="config-terms-btn">
+                    <span>📜 Términos & Condiciones</span>
+                </button>
+                <div class="config-version">Trials of Mastery • Halloween Edition</div>
             </div>
         </div>
     </div>
@@ -862,6 +945,7 @@
 
     <script src="js/settings.js"></script>
     <script src="js/halloween_pass.js"></script>
+    <script src="js/halloween_wheel.js"></script>
     <script>
         // Inject SVG icons into placeholders
         document.addEventListener('DOMContentLoaded', () => {

@@ -7,13 +7,20 @@ const Multiplayer = {
         if (!window.leaderboardAPI) return;
 
         const loop = () => {
+            // Optimization: Skip network checks when tab is hidden or during active gameplay
+            if (document.hidden || (window.game && window.game.isPlaying)) {
+                this.pollingInterval = setTimeout(loop, 12000);
+                return;
+            }
             this.checkAttacks();
-            const delay = window.potatoMode ? 24000 : 8000;
+            const delay = window.PerformanceManager 
+                ? window.PerformanceManager.getNetworkDelay() 
+                : (window.potatoMode ? 35000 : 14000);
             this.pollingInterval = setTimeout(loop, delay);
         };
         
         // Initial delay
-        this.pollingInterval = setTimeout(loop, 2000);
+        this.pollingInterval = setTimeout(loop, 3000);
     },
 
     stop() {

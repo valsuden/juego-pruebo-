@@ -5,6 +5,9 @@
 const Storage = {
 
     salt: (window.CONFIG && window.CONFIG.SECURITY_SALT_STORAGE) || "tom_secure_salt_2026_X",
+    _cachedUsers: null,
+    _saveTimer: null,
+    _isPendingSave: false,
 
     _hash(str) {
         let hash = 0;
@@ -17,10 +20,17 @@ const Storage = {
     },
 
     _getAll() {
+        if (this._cachedUsers) {
+            return this._cachedUsers;
+        }
+
         try {
             const raw       = localStorage.getItem('tom_users');
             const signature = localStorage.getItem('tom_users_sig');
-            if (!raw) return {};
+            if (!raw) {
+                this._cachedUsers = {};
+                return this._cachedUsers;
+            }
 
             const expectedSig = this._hash(raw + this.salt);
             if (signature !== expectedSig) {
@@ -35,32 +45,42 @@ const Storage = {
                     });
                 }
 
-                // CORRECCIÓN B-09: No borramos los datos para evitar pérdida catastrófica
-                // si hay un bug en la carga del salt de configuración.
-                return {};
+                this._cachedUsers = {};
+                return this._cachedUsers;
             }
 
             try {
-                return JSON.parse(raw);
+                this._cachedUsers = JSON.parse(raw);
+                return this._cachedUsers;
             } catch (parseError) {
                 console.warn("⚠️ Error al parsear tom_users.");
-                return {};
+                this._cachedUsers = {};
+                return this._cachedUsers;
             }
         } catch (e) { 
             console.warn("⚠️ Error en _getAll:", e);
-            return {}; 
+            this._cachedUsers = {};
+            return this._cachedUsers; 
         }
     },
 
-    _saveAll(data) {
+    _flushPendingSave() {
+        if (!this._isPendingSave || !this._cachedUsers) return;
+        this._isPendingSave = false;
+        if (this._saveTimer) {
+            clearTimeout(this._saveTimer);
+            this._saveTimer = null;
+        }
+        this._writeDirect(this._cachedUsers);
+    },
+
+    _writeDirect(data) {
         // Server-side caps enforced locally too
         for (const name in data) {
             if ((data[name].coins || 0) > 5000) {
-                console.warn(`Anti-Cheat: Coins cap exceeded for ${name}. Capping.`);
                 data[name].coins = 5000;
             }
             if ((data[name].highScore || 0) > 9999) {
-                console.warn(`Anti-Cheat: Score cap exceeded for ${name}. Capping.`);
                 data[name].highScore = 9999;
             }
             if (data[name].stats && (data[name].stats.maxStreak || 0) > 9999) {
@@ -75,6 +95,22 @@ const Storage = {
         } catch (e) {
             console.warn("⚠️ Error al guardar datos en localStorage:", e);
         }
+    },
+
+    _saveAll(data, immediate = false) {
+        this._cachedUsers = data;
+        this._isPendingSave = true;
+
+        if (immediate) {
+            this._flushPendingSave();
+            return;
+        }
+
+        // Debounce writes (150ms) to prevent UI micro-stutters during rapid operations
+        if (this._saveTimer) clearTimeout(this._saveTimer);
+        this._saveTimer = setTimeout(() => {
+            this._flushPendingSave();
+        }, 150);
     },
 
     getUser(name) {
@@ -97,15 +133,15 @@ const Storage = {
                 stats:          { gamesPlayed: 0, wordsCorrect: 0, maxStreak: 0 },
                 lastSaved:      0
             };
-            this._saveAll(all);
+            this._saveAll(all, true);
         }
         return all[name];
     },
 
-    saveUser(name, data) {
+    saveUser(name, data, immediate = false) {
         const all = this._getAll();
         all[name] = data;
-        this._saveAll(all);
+        this._saveAll(all, immediate);
     },
 
     getAllUsers() {
@@ -125,3 +161,8 @@ const Storage = {
             .sort((a, b) => b.score - a.score);
     }
 };
+
+// Ensure zero data loss on tab close or navigation
+window.addEventListener('beforeunload', () => Storage._flushPendingSave());
+window.addEventListener('pagehide', () => Storage._flushPendingSave());
+

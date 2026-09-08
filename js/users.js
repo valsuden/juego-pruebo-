@@ -379,10 +379,12 @@ const Users = {
     _showHUD() {
         const h = document.getElementById('shop-hud');
         if (h) h.style.display = 'flex';
+        const btn = document.getElementById('historia-btn');
+        if (btn) btn.style.display = 'inline-flex';
     },
     _hideHUD() {
         const h = document.getElementById('shop-hud');
-        if (h) h.style.display = 'none';
+        if (h) h.style.display = 'flex';
         const btn = document.getElementById('historia-btn');
         if (btn) btn.style.display = 'none';
     },

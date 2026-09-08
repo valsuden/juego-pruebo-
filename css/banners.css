@@ -579,6 +579,22 @@
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
 }
 
+.bn-witch {
+    background: linear-gradient(135deg, #100220 0%, #3b0764 25%, #052e16 50%, #581c87 75%, #100220 100%);
+    background-size: 250% 250%;
+    border: 2px solid #a855f7;
+    color: #f3e8ff !important;
+    text-shadow: 0 0 10px #c084fc, 0 0 20px #22c55e;
+    animation: witchCovenGlow 4s ease infinite;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.6), inset 0 0 15px rgba(34, 197, 94, 0.3);
+}
+
+@keyframes witchCovenGlow {
+    0% { background-position: 0% 50%; box-shadow: 0 0 15px #a855f7, inset 0 0 10px #22c55e; }
+    50% { background-position: 100% 50%; box-shadow: 0 0 25px #22c55e, inset 0 0 15px #c084fc; }
+    100% { background-position: 0% 50%; box-shadow: 0 0 15px #a855f7, inset 0 0 10px #22c55e; }
+}
+
 /* AVATAR FRAMES */
 .frame-none {
     border: 2px solid transparent;
@@ -606,4 +622,16 @@
 @keyframes pulseThrone {
     from { transform: scale(1); filter: brightness(1); }
     to { transform: scale(1.04); filter: brightness(1.3); }
+}
+
+.frame-witch {
+    border: 3px solid #c084fc !important;
+    box-shadow: 0 0 20px #9333ea, 0 0 30px #22c55e, inset 0 0 12px rgba(168, 85, 247, 0.6) !important;
+    border-radius: 50%;
+    animation: pulseWitchFrame 2.2s infinite alternate;
+}
+
+@keyframes pulseWitchFrame {
+    from { transform: scale(1); filter: drop-shadow(0 0 8px #9333ea); }
+    to { transform: scale(1.05); filter: drop-shadow(0 0 16px #22c55e); }
 }

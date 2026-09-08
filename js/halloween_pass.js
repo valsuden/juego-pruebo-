@@ -743,31 +743,39 @@ const HalloweenPass = {
             </div>
         `;
 
-        // Place on lobby underneath the start container
-        const lobbyCenter = document.querySelector('.start-menu-content') || document.getElementById('start-screen-content');
-        if (lobbyCenter && lobbyCenter.parentNode) {
-            lobbyCenter.parentNode.insertBefore(lobbyCard, lobbyCenter.nextSibling);
+        // Mount cleanly inside the lobby container (not inside start-screen)
+        const mount = document.getElementById('hw-lobby-pass-mount');
+        if (mount) {
+            mount.innerHTML = '';
+            mount.appendChild(lobbyCard);
         } else {
-            const app = document.getElementById('app') || document.body;
-            app.appendChild(lobbyCard);
+            const playerSetup = document.getElementById('player-setup');
+            if (playerSetup && playerSetup.parentNode) {
+                playerSetup.parentNode.insertBefore(lobbyCard, playerSetup.nextSibling);
+            } else {
+                const container = document.querySelector('.container') || document.body;
+                container.appendChild(lobbyCard);
+            }
         }
 
-        // Add prominent Halloween Pass button to the mobile / desktop top bar
-        const topBar = document.getElementById('mobile-top-bar');
-        if (topBar) {
-            const passBtn = document.createElement('button');
-            passBtn.id = 'hw-topbar-pass-btn';
-            passBtn.className = 'hw-btn';
-            passBtn.style.cssText = 'position:fixed; top:15px; left:180px; z-index:1000; padding:12px; font-size:0.7em; background:var(--bg-card); color:var(--accent); border:2px solid var(--accent); border-radius:12px; font-weight:bold; font-family:"Press Start 2P", cursive; cursor:pointer; box-shadow:0 0 12px rgba(255,117,24,0.4); display:flex; align-items:center; gap:8px;';
-            passBtn.innerHTML = `<span class="hw-icon-placeholder" data-icon="pumpkin">${window.HWIcon ? window.HWIcon('pumpkin') : '🎃'}</span> PASS <span class="hw-pass-notify-dot" id="hw-topbar-dot" style="display:none;"></span>`;
-            
-            // Adjust position if historia button exists
-            const histBtn = document.getElementById('historia-btn');
-            if (histBtn) {
-                histBtn.style.left = '330px';
-            }
-            topBar.appendChild(passBtn);
-            passBtn.addEventListener('click', () => this.open());
+        // Bind prominent Halloween Pass button in the top bar
+        const topbarPassBtn = document.getElementById('hw-topbar-pass-btn');
+        if (topbarPassBtn && !topbarPassBtn._hwListenerAdded) {
+            topbarPassBtn.addEventListener('click', () => this.open());
+            topbarPassBtn._hwListenerAdded = true;
+        }
+
+        // Bind top bar Leaderboard button
+        const topbarLbBtn = document.getElementById('hud-lb-btn');
+        if (topbarLbBtn && !topbarLbBtn._hwListenerAdded) {
+            topbarLbBtn.addEventListener('click', () => {
+                if (typeof window.showLeaderboard === 'function') window.showLeaderboard();
+            });
+            topbarLbBtn._hwListenerAdded = true;
+        }
+
+        if (window.renderHWIcons) {
+            window.renderHWIcons();
         }
     },
 
@@ -870,6 +878,9 @@ const HalloweenPass = {
 
         const hwCoinsVal = document.getElementById('hw-halloween-coins-val');
         if (hwCoinsVal) hwCoinsVal.textContent = hwCoins.toLocaleString();
+
+        const hudHwCoinsVal = document.getElementById('hud-hw-coins-val');
+        if (hudHwCoinsVal) hudHwCoinsVal.textContent = hwCoins.toLocaleString();
 
         const claimAllBtn = document.getElementById('hw-btn-claim-all');
         if (claimAllBtn) {

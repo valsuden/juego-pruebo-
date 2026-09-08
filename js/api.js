@@ -324,6 +324,18 @@
         var oldScript = document.getElementById('top3-jsonp-script');
         if (oldScript) oldScript.remove();
 
+        // Performance: skip background polling if tab is hidden or actively playing
+        if (document.hidden || (window.game && window.game.isPlaying)) return;
+
+        var startReqTime = performance.now();
+        var origCb = window.top3Callback;
+        window.top3Callback = function(data) {
+            if (window.PerformanceManager) {
+                window.PerformanceManager.recordApiLatency(performance.now() - startReqTime);
+            }
+            if (typeof origCb === 'function') origCb(data);
+        };
+
         var script = document.createElement('script');
         script.id = 'top3-jsonp-script';
         // CORRECCIÓN B-21: Agregar action=getLeaderboard
@@ -334,11 +346,25 @@
     window.startTop3Updates = function () {
         window.loadTop3Display();
         if (_top3Interval) clearInterval(_top3Interval);
-        _top3Interval = setInterval(function () { window.loadTop3Display(); }, 30000);
+        
+        const getDelay = () => {
+            if (window.PerformanceManager) return window.PerformanceManager.getNetworkDelay();
+            return window.potatoMode ? 45000 : 30000;
+        };
+
+        const scheduleNext = () => {
+            _top3Interval = setTimeout(() => {
+                if (!document.hidden && (!window.game || !window.game.isPlaying)) {
+                    window.loadTop3Display();
+                }
+                scheduleNext();
+            }, getDelay());
+        };
+        scheduleNext();
     };
 
     window.stopTop3Updates = function () {
-        if (_top3Interval) { clearInterval(_top3Interval); _top3Interval = null; }
+        if (_top3Interval) { clearTimeout(_top3Interval); clearInterval(_top3Interval); _top3Interval = null; }
     };
 
     // =========================================================================
@@ -1025,7 +1051,19 @@
             });
         },
 
+        _cache: {},
+
         jsonp: function(url, params, callback) {
+            // Check cache for idempotent GET actions
+            const isCacheable = (params.action === 'getNotes' || params.action === 'getState');
+            const cacheKey = url + '?' + (params.action || '');
+            const now = Date.now();
+
+            if (isCacheable && this._cache[cacheKey] && (now - this._cache[cacheKey].timestamp < 15000)) {
+                if (callback) callback(this._cache[cacheKey].data);
+                return;
+            }
+
             var cbName = 'jsonpCb_' + Date.now() + Math.round(Math.random() * 999999);
             params.callback = cbName;
             params.t = Date.now();
@@ -1034,10 +1072,23 @@
             script.id = cbName;
             script.src = url + '?' + qs;
             
+            var self = this;
+            var startT = performance.now();
+
             window[cbName] = function(data) {
                 delete window[cbName];
                 var el = document.getElementById(cbName);
                 if (el) el.remove();
+
+                var latency = performance.now() - startT;
+                if (window.PerformanceManager) {
+                    window.PerformanceManager.recordApiLatency(latency);
+                }
+
+                if (isCacheable && data && data.success) {
+                    self._cache[cacheKey] = { timestamp: Date.now(), data: data };
+                }
+
                 if (callback) callback(data);
             };
             script.onerror = function() {

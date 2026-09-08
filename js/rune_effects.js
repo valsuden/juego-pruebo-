@@ -324,6 +324,16 @@ function applyRune(runeId) {
         }
         return true;
     }
+    if (runeId === 'rune_witch_soul') {
+        if (typeof Game !== 'undefined') {
+            Game.magicEnergy = 5;
+            Game.timeLeft = Math.min(120, (Game.timeLeft || 60) + 25);
+            Game.doublePointsUntil = Date.now() + 20000;
+            if (typeof Game.updateUI === 'function') Game.updateUI();
+        }
+        showRuneAlert("🧙‍♀️ Runa del Alma de la Bruja — +25s, Vidas al máximo y Puntos Dobles activados.", "#c084fc");
+        return true;
+    }
 
     // Secret Rune
     if (runeId === 'rune_two_time') {

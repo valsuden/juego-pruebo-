@@ -38,6 +38,7 @@ const RUNES_ES = {
     rune_overdrive:     { name: 'Runa de Sobrecarga',           desc: 'Ya no hay límites. (Puntos x3 durante 30 segundos)' },
     rune_emperor:       { name: 'Runa del Emperador',           desc: 'Gobierna por encima de todos. (+15 puntos y +2 vidas al instante)' },
     rune_fate_rewind:   { name: 'Runa del Destino',             desc: 'El tiempo se dobla, pero nunca gratis. (Restaura vidas y tiempo. Pierdes la racha y no puedes ganar racha)' },
+    rune_witch_soul:    { name: 'Runa del Alma de la Bruja',    desc: 'La llama eterna del aquelarre bendice tu prueba. (+25s, restaura vidas y duplica puntos por 20s)' },
     rune_two_time:      { name: 'Runa de Segunda Vez',          desc: 'El Spawn vio tu caída... y decidió darte otra oportunidad. (Restaura vidas y tiempo, quita efectos negativos. Pierdes la racha)' }
 };
 
