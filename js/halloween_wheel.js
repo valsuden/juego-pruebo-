@@ -855,13 +855,21 @@ const WitchWheel = {
                 totalSpins: 0,
                 coinsSpent: 0,
                 pumpkinCoinsSpent: 0,
-                mythicsPulled: 0,
-                legendariesPulled: 0,
-                epicsPulled: 0
+                mythicCount: 0,
+                legendaryCount: 0,
+                epicCount: 0,
+                rareCount: 0,
+                commonCount: 0
             };
         }
         
         const stats = Users.data.summonStats;
+        if (stats.commonCount === undefined) stats.commonCount = 0;
+        if (stats.rareCount === undefined) stats.rareCount = 0;
+        if (stats.epicCount === undefined) stats.epicCount = 0;
+        if (stats.legendaryCount === undefined) stats.legendaryCount = 0;
+        if (stats.mythicCount === undefined) stats.mythicCount = 0;
+        
         stats.totalSpins += count;
         if (isCoins) stats.coinsSpent += cost;
         else stats.pumpkinCoinsSpent += cost;
