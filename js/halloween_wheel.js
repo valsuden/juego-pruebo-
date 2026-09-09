@@ -862,6 +862,9 @@ const WitchWheel = {
                 commonCount: 0
             };
         }
+        if (!Users.data.summonPity) {
+            Users.data.summonPity = { epic: 0, legendary: 0, mythic: 0 };
+        }
         
         const stats = Users.data.summonStats;
         if (stats.commonCount === undefined) stats.commonCount = 0;
@@ -905,6 +908,9 @@ const WitchWheel = {
     },
 
     rollReward() {
+        if (!Users.data.summonPity) {
+            Users.data.summonPity = { epic: 0, legendary: 0, mythic: 0 };
+        }
         const pity = Users.data.summonPity;
         let chosenTier = 'Common';
 
@@ -977,6 +983,9 @@ const WitchWheel = {
         const granted = this.grantRealReward(selected);
 
         // Add to summon history (capped to last 20)
+        if (!Array.isArray(Users.data.summonHistory)) {
+            Users.data.summonHistory = [];
+        }
         const hist = Users.data.summonHistory;
         hist.unshift({
             name: selected.name,
