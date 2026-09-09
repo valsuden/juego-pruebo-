@@ -195,6 +195,24 @@ const Users = {
         }
     },
 
+    spendCoins(n) {
+        if (!this.data) return;
+        if (n <= 0) return;
+        if ((this.data.coins || 0) < n) return;
+        this.data.coins -= n;
+        this.save();
+        this.updateUI();
+    },
+
+    spendPumpkins(n) {
+        if (!this.data) return;
+        if (n <= 0) return;
+        if ((this.data.halloweenCoins || 0) < n) return;
+        this.data.halloweenCoins -= n;
+        this.save();
+        this.updateUI();
+    },
+
     // =========================================================================
     // Coin management
     // =========================================================================

@@ -842,9 +842,9 @@ const WitchWheel = {
 
         // Deduct currency
         if (isCoins) {
-            Users.addCoins(-cost);
+            Users.spendCoins(cost);
         } else {
-            Users.data.halloweenCoins = Math.max(0, (Users.data.halloweenCoins || 0) - cost);
+            Users.spendPumpkins(cost);
         }
 
         // Track stats
