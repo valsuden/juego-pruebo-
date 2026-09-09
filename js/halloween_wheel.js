@@ -837,10 +837,12 @@ const WitchWheel = {
     },
 
     executeSpin(count, cost, isCoins) {
+        console.log("EXEC: Start");
         this.isSpinning = true;
         this.setSpinButtonsDisabled(true);
 
         // Deduct currency
+        console.log("EXEC: Deducting");
         if (isCoins) {
             Users.spendCoins(cost);
         } else {
@@ -848,6 +850,17 @@ const WitchWheel = {
         }
 
         // Track stats
+        if (!Users.data.summonStats) {
+            Users.data.summonStats = {
+                totalSpins: 0,
+                coinsSpent: 0,
+                pumpkinCoinsSpent: 0,
+                mythicsPulled: 0,
+                legendariesPulled: 0,
+                epicsPulled: 0
+            };
+        }
+        
         const stats = Users.data.summonStats;
         stats.totalSpins += count;
         if (isCoins) stats.coinsSpent += cost;
@@ -874,7 +887,9 @@ const WitchWheel = {
         const targetResult = count === 1 ? results[0] : this.getBestReward(results);
         const targetSliceIndex = this.findMatchingSliceIndex(targetResult.tier);
 
+        console.log("EXEC: Animation start");
         this.animateWheelSpin(targetSliceIndex, () => {
+            console.log("EXEC: Animation callback");
             this.isSpinning = false;
             this.setSpinButtonsDisabled(false);
             this.presentRewardReveal(results);
@@ -1088,6 +1103,7 @@ const WitchWheel = {
             canvas.style.transition = 'transform 0.4s ease-out';
             canvas.style.transform = `rotate(${finalRotation}deg)`;
             setTimeout(() => {
+                console.log("ANIM: Timeout end (potato)");
                 if (tickInterval) clearInterval(tickInterval);
                 onComplete();
             }, 450);
@@ -1095,6 +1111,7 @@ const WitchWheel = {
             canvas.style.transition = 'transform 4s cubic-bezier(0.12, 0.8, 0.32, 1)';
             canvas.style.transform = `rotate(${finalRotation}deg)`;
             setTimeout(() => {
+                console.log("ANIM: Timeout end (normal)");
                 if (tickInterval) clearInterval(tickInterval);
                 onComplete();
             }, 4150);
