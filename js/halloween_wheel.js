@@ -752,18 +752,27 @@ const WitchWheel = {
     },
 
     requestSpin(count) {
-        if (this.isSpinning) return;
+        console.log("Spin requested, count:", count);
+        if (this.isSpinning) {
+            console.log("Spin blocked: already spinning");
+            return;
+        }
 
         const isCoins = this.selectedCurrency === 'coins';
         const cost = count === 10
             ? (isCoins ? this.CONFIG.costTenCoins : this.CONFIG.costTenPumpkin)
             : (isCoins ? this.CONFIG.costSingleCoins : this.CONFIG.costSinglePumpkin);
+        
+        console.log("Currency:", this.selectedCurrency, "Cost:", cost);
 
         const currentBalance = isCoins
             ? (Users.data.coins || 0)
             : (Users.data.halloweenCoins || 0);
+        
+        console.log("Current balance:", currentBalance);
 
         if (currentBalance < cost) {
+            console.log("Insufficient funds");
             const curName = isCoins ? 'Monedas Arcanas' : 'Pumpkin Coins';
             this.showSubmodalAlert('FONDOS INSUFICIENTES', `
                 <div style="text-align:center; padding:16px;">
@@ -774,6 +783,8 @@ const WitchWheel = {
             `);
             return;
         }
+
+        console.log("Funds sufficient, proceeding to spin");
 
         // If 10x, show confirmation dialog first
         if (count === 10) {
